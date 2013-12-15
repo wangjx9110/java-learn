@@ -1,8 +1,14 @@
 package a.b;
 
-class B {
+public class packageB {
     int b = 2;
-    void b() {
+    public void b() {
         System.out.println("This is package b");
+    }
+}
+
+class M {
+    public void haha() {
+        System.out.println("HAHA");
     }
 }
