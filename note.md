@@ -92,7 +92,175 @@
 #####如果程序当前目录中某个无名包类和程序引入的包中的某个类重名, 使用无名包中的类, 要使用引入的要写全称 (即无名包中的类会屏蔽引入包中的类)
 #####IMP: 引入的包中可以使用的类必须是包中的公共(public)类
 
-####访问权限
+###TIPS: 同一个包中友好就是PUBLIC, 不同一个包中友好就是PRIVATE
+
+####访问权限<对象的访问权限> <主要还是说用`.`能不能获取> [一个类创建了一个对象之后, 这个对象操作自己的变量和使用类中的方法是是有一定限制的]
+#####访问权限是指对象能否通过`.`运算法操作自己的变量过使用类中的方法
+#####PRIVATE : 在类外部的对象不可引用, 用类名使用`.`引用类方法也是不行的
+#####PUBLIC : 在任何一个类中用该类创建的对象都可以访问自己的PUBLIC变量和方法
+#####友好[什么也不写] : 同一个包中PUBLIC, 即都可以访问. 不在同一个包中(用IMPORT引入的), PRIVATE, 即在另外一个包中建立的对象不能访问
+#####PROTECTED : 同友好的一样 <但在继承上有区别>
+
+#####类的修饰: PUBLIC & 不写(即友好的)
+#####PUBLIC的类在任何一个另外的类中都可以创建对象
+#####友好的类只能在同包中的类中创建对象
+
+####类的继承
+#####子类: extends, 没有显式说明的类都是继承自Object
+
+    子类的继承性
+        子类和父类在同一个包中: 不继承父类 PRIVATE
+        子类和父类不在同一个包中: 不继承父类 PRIVATE & 友好
+
+#####PROTECTED(使用): 在其他类中创建的对象访问其PROTECTED属性, 如果该类最初声明PROTECTED变量的地方同包则可以访问, 否则不可
+#####重写父类方法时, 不可以降低访问权限
+
+#####final关键字: 修饰类, 成员变量 & 方法及其中的参数
+#####FINAL类: 不能被继承
+#####FINAL方法: 方法不能被重写
+#####FINAL变量: 常量(必须有初值)
+#####FINAL参数: 参数指不能被改变
+
+####上转型对象
+#####上转型对象强制转换成子类对象时, 将恢复子类功能.
+
+####abstract类 & abstract方法
+1. abstract类可以否abstract方法, a方法不允许实现, 并且不允许用final修饰, 因为要被继承实现(子类必须实现其父a类的a方法)
+2. abstract类不能用new运算符创建对象, 因为其中的a方法都没有实现
+
+#####一个abstract类关心的是子类是否具有某种功能, 并不关心具体行为, 行为由子类实现, 其强制子类必须给出这些方法的具体实现
+
+####SUPER关键字
+1. SUPER调用父类构造方法: 子类不继承父类的构造方法, 如果子类想使用父类的构造方法, 在子类构造方法的第一句调用super函数, 即代表父类构造方法.
+#####TIPS: 如果子类构造函数中没有使用super则默认使用无参的super(), 所以如果父类显式写了构造函数, 最好有个w无参构造函数
+2. SUPER调用隐藏的成员变量和方法: super.x; super.play();
+
+####接口(克服单继承) <与类很像, 分接口声明和接口体>
+
+    接口
+        接口声明
+        接口体
+            常量!!定义
+            方法定义(只进行方法声明, 用`;`结尾, 同abstract方法相同)
+
+####实现接口的方法要用public修饰 [接口中方法默认public abstract, 常量默认public static, 可以用`接口名.常量`]
+####public interface
+####接口回调: 上转型
+####接口做参数: 同接口回调
+
+##第五章
+
+####1. `String s = new String("This is a string..")`
+####2. `Strings = new String(s);`
+####3. `String s = new String(char a[][, int startIndex, int count])`
+
+####字符串变量是使用的地址, 赋值赋地址
+
+####字符串的常用方法(s.方法即可)
+#####(1) int length()
+
+#####(2) boolean equals(String s) 比较实体的值是否相同, 而不是引用 
+         boolean equalsIgnoreCase(String s)
+
+#####(3) boolean startsWith(String perfix[, int startIndex]) 
+         boolean endsWith(String s)
+
+#####(4) boolean regionMatches(int originStart, String targetString, int targetStart, int bothLength);
+#####匹配两个字符串范围是否相同, 源字符串范围originStart开始, 长度为bothLength, 目标字符串targetString, 范围targetStart开始, 长度为bothLength
+
+#####(5) int compareTo(String s) 按字典序排序, 等于s返回0, 大于s返回正值, 小于s返回负值 
+         int compareToIgnoreCase(String s)
+
+#####(6) int indexOf(String s[, int startIndex]) 返回第一次匹配位置, 没有返回-1
+         int lastIndexOf(String s)
+
+#####(7) String substring(int startIndex[, int endIndex])
+
+#####(8) String replaceAll(String oldString, String newString)
+         String replaceFirst(String oldString, String newString)
+
+#####(9) String trim()
+
+####字符串与基本数据的相互转化
+####字符串 -> 数字
+    
+    Integer.parseInt(String s) 类似有Byte, Short, Int, Long, Float, Double
+
+####数字 -> 字符串
+    
+    String.valueOf(...);
+
+####整数的各种进制的字符串
+    
+    Long.toBinarySting(Long i)
+    Long.toOctalString(Long i)
+    Long.toHexString(Long i)
+    Long.toString(Long i, int p) p为进制
+
+####StringTokenizer类
+
+    import java.util.*;
+    class S {
+        public static void main(String args[]) {
+            String s = "This is a test string";
+            StringTokenizer st = new StringTokenizer(s, " ,");
+            String length = st.countTokens();
+            while (st.hasMoreTokens()) {
+                String str = st.nextToken();
+                String cnt = st.countTokens();
+            }
+        }
+    }
+
+####StringBuffer类(可修改字符串序列)
+#####SAMPLE 
+
+    StringBuffer s = new StringBuffer("This is a test string");
+    s.append(" string add to s");
+
+#####构造方法
+
+    StringBuffer() -> 分配16个字符, 多了自动分配
+    StringBuffer(int size) -> size个字符
+    StringBuffer(String s) -> s + 16个字符
+    
+    append();
+    charAt(int index);
+    setCharAt(int index, char ch);
+    insert(int index, String s);
+    reverse();
+    delete(int startIndex, int endIndex);
+    replace(int startIndex, int endIndex, String str);
+
+#####正则表达式
+    
+    boolean matches(String reg)
+    String reg = "\\w{1,}";
+    String str = "This is a test message..";
+    str.matches(reg);
+
+##第九章
+
+###线程的状态与生命周期
+####P227
+####线程生命周期: 新建 -> 运行(start, run) -> 中断 -> 结束
+
+####java使用Thread类及其子类的对象表示进程
+
+####start()加入CPU循环
+####获取CPU控制权时执行run(), 所以必须在子类重写父类的run()
+
+####中断的四种原因: 
+####1. CPU切换 2. 调用sleep()[进入阻塞状态, 一定毫秒后重新加入队列] 3.调用wait()[进入阻塞状态, 有notify()时重新加入事件队列] 4.某个操作进入阻塞状态(如读写操作, 完成后进入队列)
+
+####结束: 1. run()方法OK. 2.线程被提前结束
+
+
+
+
+    
+
+
 
 #NOTE
 
@@ -115,3 +283,6 @@
 ###A: 嗯, 必须一样, 但不区分大小写
 
 ###6. 是否一个类只能在一个包中?(即一个源文件只能有一个package语句吗?)
+
+###7. 一个类内部建立一个自己类型的对象其PRIVATE是否可以访问?
+###A: 可以, 只要在类内, PRIVATE都可以被访问
